@@ -11,7 +11,6 @@ namespace FunctionalTests.Nunit_Tests
         [Test]
         public void LaunchOfficeWorks()
         {
-            HomePage home = new HomePage(driver);
             home.goToPage(JsonConfigProvider.Environment.ApplicationUrl);
             home.SearchItem("TC001".GetTestData("Product").Trim());
         }

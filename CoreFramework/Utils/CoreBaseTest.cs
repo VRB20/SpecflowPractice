@@ -8,20 +8,17 @@ namespace CoreFramework.Utils
     public class CoreBaseTest
     {
         protected IWebDriver driver;
+        private WebDriverFactory webDriverFactory = new WebDriverFactory();
         [SetUp]
         public void SetupBeforeEverySingleTest()
         {
-            var driverConfig = JsonConfigProvider.WebDriver;
-            driver = new WebDriverFactory().GetWebDriver(driverConfig);
-            driver.Manage().Window.Maximize();
-            driver.Manage().Timeouts().ImplicitWait
-                    = TimeSpan.FromSeconds(JsonConfigProvider.WebDriver.DefaultTimeout);
+            driver = webDriverFactory.GetWebDriver();
         }
 
         [TearDown]
         public void CleanUpAfterEverySingleTest()
         {
-            driver.Quit();
+            webDriverFactory.CloseDriver();
         }
     }
 }

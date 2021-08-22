@@ -11,19 +11,47 @@ namespace CoreFramework.Helpers
 {
     public class WebDriverFactory
     {
-        IWebDriver driver;
-        public static readonly string driverFolder = typeof(WebDriverFactory).Assembly.GetFolder(@"Drivers").FullName.ToString();
-        public IWebDriver GetWebDriver(WebDriverConfiguration driverConfig)
+        private IWebDriver GlobalDriver;
+        private readonly string driverFolder = typeof(WebDriverFactory).Assembly.GetFolder(@"Drivers").FullName.ToString();
+        private WebDriverConfiguration driverConfig;
+
+        private void GetDriverConfig()
+        {
+            driverConfig = JsonConfigProvider.WebDriver;
+        }
+        private void SetWebDriver()
         {
             switch (driverConfig.BrowserName)
             {
                 case BrowserName.Chrome:
-                    driver = new ChromeDriver(driverFolder);
-                    return driver;
+                    GlobalDriver = new ChromeDriver(driverFolder);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(JsonConfigProvider.WebDriver.BrowserName),
                         JsonConfigProvider.WebDriver.BrowserName, null);
             }
+        }
+        private void SetDriverNorms()
+        {
+            GlobalDriver.Manage().Window.Maximize();
+            GlobalDriver.Manage().Timeouts().ImplicitWait
+                    = TimeSpan.FromSeconds(JsonConfigProvider.WebDriver.DefaultTimeout);
+        }
+        public IWebDriver GetWebDriver()
+        {
+            if (GlobalDriver == null)
+            {
+                GetDriverConfig();
+                SetWebDriver();
+                SetDriverNorms();
+            }
+            return GlobalDriver;
+        }
+
+        public void CloseDriver()
+        {
+            GlobalDriver.Close();
+            GlobalDriver.Quit();
         }
     }
 }
