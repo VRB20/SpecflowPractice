@@ -1,0 +1,10 @@
+﻿{
+  "webdriver": {
+    "BrowserName": "Chrome",
+    "ScreenshotsPath": "C:\\screenshots\\STORE",
+    "DefaultTimeout": "30"
+  },
+  "environment": {
+    "ApplicationUrl": "https://www.officeworks.com.au/"
+  }
+}
